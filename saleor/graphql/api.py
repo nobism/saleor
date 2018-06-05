@@ -6,6 +6,8 @@ from .descriptions import DESCRIPTIONS
 from ..page import models as page_models
 from .core.filters import DistinctFilterSet
 from .core.mutations import CreateToken, VerifyToken
+from .core.resolvers import resolve_shop
+from .core.types import Shop
 from .order.filters import OrderFilter
 from .order.resolvers import resolve_order, resolve_orders
 from .order.types import Order
@@ -78,6 +80,9 @@ class Query(graphene.ObjectType):
         ProductType, filterset_class=DistinctFilterSet,
         level=graphene.Argument(graphene.Int),
         description='List of the shop\'s product types.')
+    shop = graphene.Field(
+        Shop, description='Represents a shop resources.',
+        resolver=resolve_shop)
     node = graphene.Node.Field()
 
     def resolve_attributes(self, info, in_category=None, query=None, **kwargs):

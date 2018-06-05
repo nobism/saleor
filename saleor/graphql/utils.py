@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from graphql_relay import from_global_id
 
 from ..product.models import AttributeChoiceValue, ProductAttribute
+from .core.types import PermissionDisplay
 
 
 def get_node(info, id, only_type=None):
@@ -94,3 +95,16 @@ def generate_query_argument_description(search_fields):
     for field in search_fields:
         supported_list += '* {0}\n'.format(field)
     return header + supported_list
+
+
+def format_permissions_for_display(permissions):
+    """Transform permissions queryset into PermissionDisplay list.
+
+    Keyword arguments:
+    permissions - queryset with permissions
+    """
+    return [
+        PermissionDisplay(
+            code='.'.join(
+                [permission.content_type.app_label, permission.codename]),
+            name=permission.name) for permission in permissions]
