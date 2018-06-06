@@ -2,6 +2,8 @@ import graphene
 import graphql_jwt
 from graphene_django.filter import DjangoFilterConnectionField
 
+from .account.resolvers import resolve_user, resolve_users
+from .account.types import User
 from .descriptions import DESCRIPTIONS
 from ..page import models as page_models
 from .core.filters import DistinctFilterSet
@@ -78,6 +80,11 @@ class Query(graphene.ObjectType):
         ProductType, filterset_class=DistinctFilterSet,
         level=graphene.Argument(graphene.Int),
         description='List of the shop\'s product types.')
+    user = graphene.Field(
+        User, id=graphene.Argument(graphene.ID),
+        description='Lookup an user type by ID.')
+    users = DjangoFilterConnectionField(
+        User, description='List of the shop\'s users.')
     node = graphene.Node.Field()
 
     def resolve_attributes(self, info, in_category=None, query=None, **kwargs):
@@ -120,6 +127,12 @@ class Query(graphene.ObjectType):
 
     def resolve_product_types(self, info):
         return resolve_product_types()
+
+    def resolve_user(self, info, id):
+        return resolve_user(info, id)
+
+    def resolve_users(self, info, **kwargs):
+        return resolve_users(info)
 
 
 class Mutations(graphene.ObjectType):
