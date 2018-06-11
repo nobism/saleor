@@ -122,9 +122,18 @@ Installation
    .. code-block:: console
 
     $ createuser --superuser --pwprompt saleor
-
+    
    Enter ``saleor`` when prompted for password.
 
+.. code-block:: console
+
+    $ psql
+    
+    $ ALTER ROLE saleor CREATEDB;
+   
+    $ SET ROLE saleor;
+    
+    $ CREATE DATABASE saleor;
 
 #. Prepare the database:
 
